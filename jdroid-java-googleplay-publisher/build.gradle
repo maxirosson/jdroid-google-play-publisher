@@ -12,6 +12,7 @@ buildscript {
 
 dependencies {
 	implementation(Libs.JDROID_JAVA_CORE)
+	api(Libs.GOOGLE_AUTH_LIBRARY)
 	api(Libs.ANDROID_PUBLISHER)
 
 	// Testing

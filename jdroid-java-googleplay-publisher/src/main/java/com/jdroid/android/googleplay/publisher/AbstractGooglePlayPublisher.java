@@ -1,7 +1,5 @@
 package com.jdroid.android.googleplay.publisher;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
@@ -11,13 +9,14 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
 import com.google.api.services.androidpublisher.model.AppEdit;
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
 import com.jdroid.java.utils.StringUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
-import java.util.Collections;
 
 
 public class AbstractGooglePlayPublisher {
@@ -75,8 +74,8 @@ public class AbstractGooglePlayPublisher {
 
 		try {
 			InputStream serviceAccountStream = new FileInputStream(appContext.getPrivateKeyJsonFilePath());
-			GoogleCredential credential = GoogleCredential.fromStream(serviceAccountStream, HTTP_TRANSPORT, JSON_FACTORY);
-			return credential.createScoped(Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER));
+			GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccountStream).createScoped(AndroidPublisherScopes.ANDROIDPUBLISHER);
+			return new HttpCredentialsAdapter(credentials);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
